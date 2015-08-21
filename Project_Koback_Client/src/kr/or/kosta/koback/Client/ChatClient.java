@@ -94,7 +94,7 @@ public class ChatClient {
 									/*[203] 비밀방 개설 응답*/	
 									case MessageType.S_SECRET_RESULT:	
 										System.out.println("[서버 답장 채팅방 개설203 비밀방] "+responeMessage);
-	
+	System.out.println("ㅌ스트");
 										if(resultResult("true")){ 
 	//										ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT,responeMessage);
 											openChatRoom();
@@ -106,6 +106,7 @@ public class ChatClient {
 								 * */		
 										
 										
+										
 									/*[211] 채팅방 입장 결과 응답 */	
 									case MessageType.S_ENTRY_RESULT:
 //										String chatRoomResult;
@@ -114,8 +115,8 @@ public class ChatClient {
 										break;	
 									/*[213] 비밀방 입장 결과 응답 */	
 									case MessageType.S_SECRET_ENTRY_RESULT:	
-//										System.out.println("[[213] 비밀방 입장 결과 응답] "+responeMessage);
-							
+//										System.out.printl n("[[213] 비밀방 입장 결과 응답] "+responeMessage);
+//										sys
 										break;		
 									/*	[101]  로그인결과응답  */	
 									case MessageType.S_LOGIN_RESULT:
