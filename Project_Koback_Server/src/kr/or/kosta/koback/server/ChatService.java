@@ -107,6 +107,14 @@ public class ChatService extends Thread {
 					String ssn = token[5];
 					String email = token[6];
 					String phoneNum = token[7];
+					
+					
+					
+					
+					
+					
+					
+					
 					userDao.addUser(new User(id, name, nick, pass, ssn, email, phoneNum));
 					sendMessage(MessageType.S_JOIN_RESULT+MessageType.DELIMETER+id+MessageType.DELIMETER+true);
 					break;
