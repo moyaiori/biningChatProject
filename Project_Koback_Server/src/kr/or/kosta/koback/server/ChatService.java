@@ -116,6 +116,7 @@ public class ChatService extends Thread {
 					
 					
 					userDao.addUser(new User(id, name, nick, pass, ssn, email, phoneNum));
+					
 					sendMessage(MessageType.S_JOIN_RESULT+MessageType.DELIMETER+id+MessageType.DELIMETER+true);
 					break;
 				case MessageType.C_OPEN:
