@@ -6,14 +6,20 @@ package kr.or.kosta.koback.model;
  */
 public class User {
 	
-	/** 유저의 속성 */
-	private String id, name, nickName, passwd;
-	private String ssn, email, phoneNumber;
+//	 속성
+	private String id;
+	private String name;
+	private String nickName;
+	private String passwd;
+	private String ssn;
+	private String email;
+	private String phoneNumber;
 	
-	/** 생성자 오버로딩 */
+	/*생성자 오버로딩*/
 	public User(){
 		this(null, null, null, null, null, null, null);
 	}
+	
 	public User(String id, String name, String nickName, String passwd, String ssn, String email, String phoneNumber){
 		this.id= id;
 		this.name = name;
@@ -22,9 +28,9 @@ public class User {
 		this.ssn = ssn;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
+		
 	}
-	
-	/** setter, getter 메소드 정의 */
+//	setter, getter 메소드 정의
 	public String getId() {
 		return id;
 	}
@@ -72,7 +78,4 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", nickName=" + nickName + ", passwd=" + passwd + ", ssn=" + ssn
 				+ ", email=" + email + ", phoneNumber=" + phoneNumber + "]";
 	}
-	
-	
-	
 }

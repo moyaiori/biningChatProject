@@ -2,8 +2,11 @@ package kr.or.kosta.koback.model;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.annotation.Native;
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.or.kosta.koback.util.Validator;
 
 /**
  * 
@@ -24,17 +27,26 @@ public class UserDao {
 	private static final int RECORD_COUNT_LENGTH = 4;
 
 	/** user 정보 저장을 위한 레코드 컬럼별 사이즈 설정 */
-	private static final int USER_ID_LENGTH = 20;
-	private static final int USER_NAME_LENGTH = 10;
-	private static final int USER_NICKNAME_LENGTH = 12;
-	private static final int USER_PASSWORD_LENGTH = 24;
-	private static final int USER_SSN_LENGTH = 28;
-	private static final int USER_EMAIL_LENGTH = 50;
-	private static final int USER_PHONE_LENGTH = 26;
+	private static final int USER_ID_LENGTH = 20;			//20바이트(최대 10글자)로 ID 저장
+	private static final int USER_NAME_LENGTH = 10;			//10바이트(최대 5글자)로 이름 저장
+	private static final int USER_NICKNAME_LENGTH = 12;		//12바이트(최대 6글자)로 닉네임 저장
+	private static final int USER_PASSWORD_LENGTH = 24;		//24바이트(최대 12글자)로 비밀번호 저장	
+	private static final int USER_SSN_LENGTH = 28;			//28바이트(-포함 14글자)로 주민번호 저장
+	private static final int USER_EMAIL_LENGTH = 50;		//50바이트(총 25글자) EMAIL저장
+	private static final int USER_PHONE_LENGTH = 26;		//26바이트(000-0000-0000 형식) 번호 저장
 
 	public static final int RECORD_LENGTH = USER_ID_LENGTH + USER_NAME_LENGTH + USER_NICKNAME_LENGTH
 			+ USER_PASSWORD_LENGTH + USER_SSN_LENGTH + USER_EMAIL_LENGTH + USER_PHONE_LENGTH;
 
+	/** 처음 시작을 닉네임에서 시작하기위한 사이즈
+	 * Password 찾기 */
+	public static final int RECORD_PASS_LENGTH = USER_ID_LENGTH + USER_NAME_LENGTH + USER_NICKNAME_LENGTH;
+
+	/** 처음 시작을 닉네임에서 시작하기위한 사이즈 
+	 * 아이디로 검색해서 닉네임으로 출력위한 파일크기*/
+	public static final int RECORD_NICK_LENGTH = USER_ID_LENGTH + USER_NAME_LENGTH;
+
+	
 	public UserDao() throws IOException {
 		randomAccessFile = new RandomAccessFile(FILE_PATH, "rw");
 		if (randomAccessFile.length() != 0) {
@@ -50,9 +62,8 @@ public class UserDao {
 		return userCount;
 	}
 
-	/* 신규 등록 */
+	/* 신규 User 등록 메소드 */
 	public void addUser(User user) throws IOException {
-		// 새로운 레코드 추가
 		randomAccessFile.seek((userCount * RECORD_LENGTH) + RECORD_COUNT_LENGTH);
 
 		String userId = user.getId();
@@ -63,7 +74,7 @@ public class UserDao {
 		String userEmaile = user.getEmail();
 		String userPhoneNum = user.getPhoneNumber();
 
-		int charCount = userId.length(); // 20바이트(10글자)로 ID 저장
+		int charCount = userId.length(); 
 		for (int i = 0; i < (USER_ID_LENGTH / 2); i++) {
 			randomAccessFile.writeChar((i < charCount ? userId.charAt(i) : ' '));
 		}
@@ -132,7 +143,8 @@ public class UserDao {
 		}
 	}
 
-	/** user 삭제 */
+	/** read, write 메소드를 이용하여
+	 * user 삭제 메소드 작성*/
 	public boolean removeUser(String getId) throws IOException {
 		String id = "";
 		String name = "";
@@ -176,12 +188,11 @@ public class UserDao {
 		return false;
 	}
 
-	/** id로검색 */
+	/** ID로 검색하여 해당 User정보 출력 */
 	public User getUser(String getId) throws IOException {
 		ArrayList<User> list = new ArrayList<User>();
 		for (int i = 0; i < userCount; i++) {
 			User user = getRecord(i);
-
 			if (user.getId().equals(getId)) {
 				return user;
 			}
@@ -189,7 +200,57 @@ public class UserDao {
 		return null;
 	}
 
-	/** passwd로검색 */
+	/** 원하는 ID로 ID 검색 */
+	public boolean onlyIdSearch(String getId) throws IOException {
+		String id = "";
+		for (int i = 0; i < userCount; i++) {
+			randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_COUNT_LENGTH);
+			id = read(USER_ID_LENGTH);
+
+			if (id.equals(getId)) {
+				return true;
+			}
+			continue;
+		}
+		return false;
+	}
+
+	/** 원하는 비밀번호만 검색 */
+	public boolean onlyPasswdSearch(String getPass) throws IOException {
+		String passwd = "";
+
+		for (int i = 0; i < userCount; i++) {
+
+			randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_COUNT_LENGTH + RECORD_PASS_LENGTH);
+
+			passwd = read(USER_PASSWORD_LENGTH);
+			if (passwd.equals(getPass)) {
+				return true;
+			}
+			continue;
+		}
+		return false;
+	}
+
+	/** ID검색해서 닉네임 가져오기 */
+	public String idSearchNickName(String getId) throws IOException {
+		String id = "";
+		String nick = "";
+
+		for (int i = 0; i < userCount; i++) {
+			randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_COUNT_LENGTH);
+			id = read(USER_ID_LENGTH);
+
+			if (id.equals(getId)) {
+				randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_NICK_LENGTH);
+				nick = read(USER_NICKNAME_LENGTH);
+			}
+			continue;
+		}
+		return nick;
+	}
+
+	/** 비밀번호로 검색 */
 	public User getUserPass(String getPasswd) throws IOException {
 		ArrayList<User> list = new ArrayList<User>();
 		for (int i = 0; i < userCount; i++) {
@@ -198,11 +259,10 @@ public class UserDao {
 			if (user.getPasswd().equals(getPasswd)) {
 				return user;
 			}
-
 		}
-
 		return null;
 	}
+	
 
 	private User getRecord(int index) throws IOException {
 		User user = null;
@@ -237,32 +297,109 @@ public class UserDao {
 			ssn += randomAccessFile.readChar();
 		}
 		ssn = ssn.trim();
-
+		
 		String email = "";
 		for (int i = 0; i < (USER_EMAIL_LENGTH / 2); i++) {
 			email += randomAccessFile.readChar();
 		}
 		email = email.trim();
-
+		
 		String phone = "";
 		for (int i = 0; i < (USER_PHONE_LENGTH / 2); i++) {
 			phone += randomAccessFile.readChar();
 		}
 		phone = phone.trim();
-
+		
 		user = new User(id, name, nickName, passwd, ssn, email, phone);
 		return user;
 	}
 
+	/** ID 중복 검사 */
+	public boolean overlapId(String getId) throws IOException {
+		String id = "";
+		for (int i = 0; i < userCount; i++) {
+			randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_COUNT_LENGTH);
+			id = read(USER_ID_LENGTH);
+			if (id.equals(getId)) {
+				return true;
+			}
+			continue;
+		}
+		return false;
+	}
+
+	/** nickName 중복 검사 */
+	public boolean overlapNick(String getNick) throws IOException {
+		String nick = "";
+		for (int i = 0; i < userCount; i++) {
+			randomAccessFile.seek((i * RECORD_LENGTH) + RECORD_NICK_LENGTH);
+			nick = read(USER_NICKNAME_LENGTH);
+			if (nick.equals(getNick)) {
+				return true;
+			}
+			continue;
+		}
+		return false;
+	}
+
+	/** Validator(정규표현식)을 이용한 ID 형식 및 길이제한 메소드 */
+	public boolean idLimitLength() {
+		if (Validator.validId("dldldl")) {
+			System.out.println("사용 가능 ID입니다.");
+		} else {
+			System.out.println("한글을 제외한 , 5자 이상 , 10자 이하로 설정해주세요 ");
+		}
+		return false;
+	}
+
+	/** 닉네임 길이제한 */
+	public boolean nickLimitLength() {
+		if (Validator.validNick("비닝이")) {
+			System.out.println("사용 가능 닉네임입니다.");
+		} else {
+			System.out.println("한글을 제외한 , 5자 이상 , 10자 이하로 설정해주세요 ");
+		}
+		return false;
+	}
+
+	/** 주민등록번호 검사 */
+	public boolean ssnChecked() {
+		if (Validator.validSSN("888888-1888888")) {
+			System.out.println("사용 가능한 주민등록번호입니다.");
+
+		} else {
+			System.out.println("주민등록번호를 제대로 입력해주십시오 ");
+		}
+		return false;
+	}
+
+	public boolean passwdChecked() {
+		if (Validator.validPass("a12121212121212aaaaaaaa12")) {
+			System.out.println("사용가능한 비밀번호입니다.");
+		} else {
+			System.out.println("7자 이상 , 12자 이하로 설정해주세요");
+		}
+		return false;
+	}
+
+	public boolean PhoneNumChecked() {
+		if (Validator.validMobileNumber("010-1111-2212")) {
+			System.out.println("사용가능한 연락처입니다.");
+		} else {
+			System.out.println("휴대폰 번호가 잘못되었습니다");
+		}
+		return false;
+	}
+
 	public void close() {
+
 		try {
 			if (randomAccessFile != null)
 				randomAccessFile.close();
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
+
 }
