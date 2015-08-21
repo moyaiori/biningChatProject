@@ -139,20 +139,35 @@ public class ChatClient {
 										}
 										break;
 										
-									/*	[300]채팅메세지 수신 결과 응답  */		
-									 case MessageType.SC_CHAT_MESSAGE:   
-											String messageId= tokens[1];
-				                           String chatMessage = tokens[3];
-				                           ui.getChatRoomPanel().setMessage("["+messageId+"] : "+ chatMessage);
-				                           break;
-				                           
-				                     /*[301] 이모티콘 송수신 응답 */      
-				                      case MessageType.SC_CHAT_EMOTICON: //
-				                           String Id= tokens[1];
-				                           String filePath = tokens[3];
-				                           System.out.println(Id + filePath);
-				                           ui.getChatRoomPanel().setEmoticon("["+Id+"] : " + filePath);
-				                           break;
+										/* [300]채팅메세지 수신 결과 응답 */
+										case MessageType.SC_CHAT_MESSAGE:
+											String messageId = tokens[1];
+											String chatMessage = tokens[3];
+											ui.getChatRoomPanel().setMessage("[" + messageId + "] : " + chatMessage);
+											break;
+				
+										/* [301] 이모티콘 송수신 응답 */
+										case MessageType.SC_CHAT_EMOTICON: //
+											String Id = tokens[1];
+											String filePath = tokens[3];
+											System.out.println(Id + filePath);
+											ui.getChatRoomPanel().setEmoticon("[" + Id + "] : " + filePath);
+											break;
+				
+										case MessageType.S_NOTICE: // [500] 서버 공지 수신
+											System.out.println(responeMessage);
+											String admin = tokens[1];
+											String adminMessage = tokens[2].trim();
+											ui.getChatRoomPanel().noticeMessage("[" + admin + "] : " + adminMessage);
+											break;
+				
+										case MessageType.S_ADMIN_WHISPER: // [501] 관리자의 귓속말
+											System.out.println(responeMessage);
+											String adminW = tokens[1];
+											String adminWhiseper = tokens[2].trim();
+											ui.getChatRoomPanel().noticeWhisperMessage("[" + adminW + "]님의 귓속말 : " + adminWhiseper);
+											break;
+										    
 								}
 							}
 						} catch (IOException e) {
