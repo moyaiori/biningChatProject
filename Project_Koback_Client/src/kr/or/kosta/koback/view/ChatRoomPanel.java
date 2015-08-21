@@ -1,5 +1,6 @@
 package kr.or.kosta.koback.view;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,6 +20,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.EmoticonButtons;
@@ -210,6 +215,41 @@ public class ChatRoomPanel extends JPanel {
       chatTextTP.insertIcon(icon);
       
    }
+   
+   
+   /**공지사항 메시지 출력 */
+   public void noticeMessage(String notice){
+	   StyledDocument doc = chatTextTP.getStyledDocument();
+	      Style style = chatTextTP.addStyle("style", null);
+	      StyleConstants.setForeground(style, Color.RED);
+	      StyleConstants.setBold(style, true);
+	      StyleConstants.setFontSize(style, 15);
+	     
+	      try {
+	         doc.insertString(doc.getLength(), notice + "\r\n" , style);
+	      } catch (BadLocationException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      }
+	      
+   }
+   
+   /** 관리자의 귓속말  */
+   public void noticeWhisperMessage(String noticeWhisper){
+	   StyledDocument doc = chatTextTP.getStyledDocument();
+	      Style style = chatTextTP.addStyle("style", null);
+	      StyleConstants.setForeground(style, Color.YELLOW);
+	      StyleConstants.setBold(style, true);
+	     
+	      try {
+	         doc.insertString(doc.getLength(), noticeWhisper + "\r\n" , style);
+	      } catch (BadLocationException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      }
+	      
+   }
+   
    
    
    /** 채팅방 유저 리스트 출력 */
