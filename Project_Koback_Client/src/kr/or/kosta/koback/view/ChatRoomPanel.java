@@ -345,6 +345,15 @@ public class ChatRoomPanel extends JPanel {
       
       
    }
+/*   
+	public void chatRoomOpenS(boolean roomOpenResult){	
+		if(roomOpenResult){//roomOpenResult: true이면 채팅방 열기
+			이 두줄이 화면을 열어주는 부분.
+			chatUI.getChatRoomPanel().titleL.setText(room.getRoomNum()+"번 방 "+room.getRoomTitle());
+			chatUI.cardOpen("chatRoom");
+		}
+		
+	}*/
    
    public void InviteFrameOpen(){
        invitePopUp = new InviteBtnPanel(chatUI);
