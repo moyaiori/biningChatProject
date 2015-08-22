@@ -19,6 +19,7 @@ import kr.or.kosta.koback.common.MessageType;
  * 	클래스 명 : ChatUI 
  *  클래스 역할 :카드레이아웃을이용하여 프레임 구현 (로그인 - 대기실 - 채팅방)
  *  화면 구현 : 조현빈 (2015 02 19 (오후 2시))
+ *  
  * */
 public class ChatUI extends JFrame {
 	
