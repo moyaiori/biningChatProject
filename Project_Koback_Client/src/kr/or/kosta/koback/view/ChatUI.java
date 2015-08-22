@@ -26,7 +26,7 @@ public class ChatUI extends JFrame {
 	private CardLayout cardLayout;
 	private UserLoginPanel userLoginPanel;
 	private ChatRoomPanel chatRoomPanel;
-	private WaitRoomPanel waitRoomPanel;
+	private WaitRoomListPanel waitRoomPanel;
 	private JPanel cardP;
 	private ChatClient chatClient;
 //	private static final String serverIP = "127.0.0.1";	////192.168.0.28
@@ -48,7 +48,7 @@ public class ChatUI extends JFrame {
 		
 		userLoginPanel = new UserLoginPanel(this);
 		chatRoomPanel = new ChatRoomPanel(this);
-		waitRoomPanel = new WaitRoomPanel(this);
+		waitRoomPanel = new WaitRoomListPanel(this);
 		cardP = new JPanel();
 		
 		setComponents();
@@ -159,11 +159,11 @@ public class ChatUI extends JFrame {
 		this.chatRoomPanel = chatRoomPanel;
 	}
 
-	public WaitRoomPanel getWaitRoomPanel() {
+	public WaitRoomListPanel getWaitRoomPanel() {
 		return waitRoomPanel;
 	}
 
-	public void setWaitRoomPanel(WaitRoomPanel waitRoomPanel) {
+	public void setWaitRoomPanel(WaitRoomListPanel waitRoomPanel) {
 		this.waitRoomPanel = waitRoomPanel;
 	}
 
