@@ -36,8 +36,9 @@ public class ChatUI extends JFrame {
 	private ChatClient chatClient;
 //	private static final String serverIP = "127.0.0.1";	////192.168.0.28
 //	private static final String serverIP = "192.168.88.1";	////192.168.0.28
-	private static final String serverIP = "192.168.0.59";	////안상오빠
+//	private static final String serverIP = "192.168.0.59";	////안상오빠
 //	private static final String serverIP = "192.168.0.76";	////192.168.0.28
+	private static final String serverIP = "192.168.0.54";	////192.168.0.28
 	private static final int serverPort = 5500;
 //	private static final int serverPort = 5550;
 	

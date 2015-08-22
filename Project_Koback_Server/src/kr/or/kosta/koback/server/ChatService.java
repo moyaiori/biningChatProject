@@ -8,18 +8,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.plaf.basic.DefaultMenuLayout;
+import javax.swing.JOptionPane;
 
 import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.Room;
 import kr.or.kosta.koback.model.RoomManager;
 import kr.or.kosta.koback.model.User;
 import kr.or.kosta.koback.model.UserDao;
-import kr.or.kosta.koback.util.GUIUtil;
-import kr.or.kosta.koback.view.CbUserModel;
-import kr.or.kosta.koback.view.ServerFrame;
 import kr.or.kosta.koback.view.UserModel;
 
 /**
@@ -58,8 +56,9 @@ public class ChatService extends Thread {
 
 	/**
 	 * 일괄로 채팅클라이언트의 요청메세지 파싱 및 서비스
+	 * @throws Exception 
 	 */
-	public void handleRequest() throws IOException {
+	public void handleRequest() throws Exception {
 		setEvent();
 		try {
 			while (!stop) {
@@ -108,14 +107,23 @@ public class ChatService extends Thread {
 					String email = token[6];
 					String phoneNum = token[7];
 					
+					List<User> gb = userDao.getAllUser();
+					for (User user : gb) {
+					if(id.equals("")){
+						JOptionPane.showMessageDialog(null, "ID를 입력해 주십시오." );
+					return;
+					}else if(user.getId().equals(id)){
+						JOptionPane.showMessageDialog(null, "해당 ID가 이미 중복됩니다.");
+						return;								
+					}
 					
-					
-					
+					}
 					
 					
 					
 					
 					userDao.addUser(new User(id, name, nick, pass, ssn, email, phoneNum));
+					
 					sendMessage(MessageType.S_JOIN_RESULT+MessageType.DELIMETER+id+MessageType.DELIMETER+true);
 					break;
 				case MessageType.C_OPEN:
@@ -273,11 +281,13 @@ public class ChatService extends Thread {
 	
 	@Override
 	public void run() {
-		try {
-			handleRequest();
-		} catch (IOException e) {
-//			GUIUtil.showErrorMessage("상대방이 접속 종료.\n");
-		}
+	
+			try {
+				handleRequest();
+			} catch (Exception e) {
+//				GUIUtil.showErrorMessage("상대방이 접속 종료.\n");
+			}
+		 
 	}
 
 	public String getUserId() {
