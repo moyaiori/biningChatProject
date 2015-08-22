@@ -42,8 +42,7 @@ public class WaitingChatRoomPanel extends JPanel {
 	private JLabel roomPersonelL = new JLabel(); // 방 인원수
 	private JButton roomEntryBtn = new JButton("입장하기"); // 방 입장
 	private JPanel roomItemP;
-	
-	
+
 	ChatUI chatUI;
 	WaitRoomListPanel waitRoomPanel;
 	Room room;
@@ -69,11 +68,11 @@ public class WaitingChatRoomPanel extends JPanel {
 				} catch (IOException e1) {
 					System.out.println("[ERROR] WaitingChatRoomPanel 클래스 방입장");
 				}
-
 			}
 		});
 	}
 
+	// 서버한테 채팅방 입장 요청
 	public void chatRoomOpenC() throws IOException {
 		waitRoomPanel.getRoomNum(roomNum); // 이거지워도되는건지...??
 		String connecionId = UserLoginPanel.userId;
@@ -82,8 +81,6 @@ public class WaitingChatRoomPanel extends JPanel {
 		// erreorMessage,"연결실패",JOptionPane.ERROR_MESSAGE);
 		System.out.println("방번호" + room.getRoomNum() + "  " + room.getPasswd());
 		/* [212] 비밀 방 입장을 요청. */
-		// if(!(room.getPasswd().equals(null))){
-
 		if (!(room.getPasswd().equals("없음"))) {
 			String roomPass = JOptionPane.showInputDialog("방 비밀번호를 입력해주세요.");
 			/* 212|아이디|방번호|비밀번호 */
@@ -97,15 +94,15 @@ public class WaitingChatRoomPanel extends JPanel {
 		} else {
 			/* [210] 일반 방 입장 요청 210|아이디|방번호|비밀번호 */
 			chatUI.getChatClient().sendMessage(
-					MessageType.C_SECRET_ENTRY + MessageType.DELIMETER + connecionId + MessageType.DELIMETER + roomNum);
+					MessageType.C_ENTRY + MessageType.DELIMETER + connecionId + MessageType.DELIMETER + roomNum);
 		}
 
 	}
-	
-	public void chatRoomOpenS(boolean roomOpenResult){	
-		if(roomOpenResult){//roomOpenResult: true이면 채팅방 열기
-			/*이 두줄이 화면을 열어주는 부분.*/
-			chatUI.getChatRoomPanel().titleL.setText(room.getRoomNum()+"번 방 "+room.getRoomTitle());
+
+	public void chatRoomOpenS(boolean roomOpenResult) {
+		if (roomOpenResult) {// roomOpenResult: true이면 채팅방 열기
+			/* 이 두줄이 화면을 열어주는 부분. */
+			chatUI.getChatRoomPanel().titleL.setText(room.getRoomNum() + "번 방 " + room.getRoomTitle());
 			chatUI.cardOpen("chatRoom");
 		}
 
