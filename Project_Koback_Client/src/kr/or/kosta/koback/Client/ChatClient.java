@@ -19,6 +19,11 @@ import kr.or.kosta.koback.util.GUIUtil;
 import kr.or.kosta.koback.view.ChatUI;
 import kr.or.kosta.koback.view.WaitRoomListPanel;
 
+/**
+ * 클라이언트 메시지 처리 
+ * @author 이광용 
+ *
+ */
 public class ChatClient {
 
 	private boolean stop;
@@ -151,6 +156,16 @@ public class ChatClient {
 	                        System.out.println(Id + filePath);
 	                        ui.getChatRoomPanel().setEmoticon("[" + Id + "] : " + filePath);
 	                        break;
+	                     /* [303] 초대 요청 */
+	                     case MessageType.C_INVITE_USER:
+	                    	 
+	                    	 break;
+	                     /* [309] 대기인 인원 요청 */
+	                     case MessageType.SC_REQUEST_WAITINGLIST:
+	                    	 
+//	                    	 ui.getChatRoomPanel().getWaitingList().
+	                    	 
+	                    	 break;
 	                        
 	                     /* [403] 파일 업로드 결과 응답 */
 	                     case MessageType.C_UPLOAD_RESULT: // 파일 업로드 결과

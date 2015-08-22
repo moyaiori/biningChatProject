@@ -31,6 +31,7 @@ public interface MessageType {
 	String C_KICK = "306";
 	String S_KICK = "307";
 	String SC_EXIT = "308";
+	String SC_REQUEST_WAITINGLIST = "309";
 	String C_UPLOAD = "400";
 	String C_UPLOAD_RESULT= "403";
 	String S_UPLOAD_FAIL = "401";

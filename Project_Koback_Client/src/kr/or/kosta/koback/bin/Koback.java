@@ -12,5 +12,6 @@ public class Koback {
 		GUIUtil.setLookAndFeel(frame,GUIUtil.THEME_NIMBUS);
 		GUIUtil.setCenterScreen(frame);
 		frame.setVisible(true);
+		System.out.println("클라이언트 구동");
 	}
 }
