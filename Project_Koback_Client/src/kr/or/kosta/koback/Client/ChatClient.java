@@ -17,8 +17,13 @@ import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.FileDao;
 import kr.or.kosta.koback.util.GUIUtil;
 import kr.or.kosta.koback.view.ChatUI;
-import kr.or.kosta.koback.view.WaitRoomPanel;
+import kr.or.kosta.koback.view.WaitRoomListPanel;
 
+/**
+ * 클라이언트 메시지 처리 
+ * @author 이광용 
+ *
+ */
 public class ChatClient {
 
 	private boolean stop;
@@ -51,151 +56,152 @@ public class ChatClient {
 
 	}
 
-	// 메세지 수신
-	public void receiveMessage() throws IOException {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
+	   // 메세지 수신
+	   public void receiveMessage() throws IOException {
+	      new Thread() {
+	         @Override
+	         public void run() {
+	            try {
 
-					while (!isStop()) {
-						String responeMessage = null;
-						while (responeMessage == null || "".equals(responeMessage)) {
-							responeMessage = in.readUTF();
-						}
+	               while (!isStop()) {
+	                  String responeMessage = null;
+	                  while (responeMessage == null || "".equals(responeMessage)) {
+	                     responeMessage = in.readUTF();
+	                  }
 
-						String[] tokens = responeMessage.split(MessageType.DELIMETER);
-						String messageCode = tokens[0];
+	                  String[] tokens = responeMessage.split(MessageType.DELIMETER);
+	                  String messageCode = tokens[0];
 
-						/*------------------switch - case 문 시작 부분 --------------------------*/
-						switch (messageCode) {
-						/* [403] 파일 업로드 결과 응답 */
-						case MessageType.C_UPLOAD_RESULT: // 파일 업로드 결과
-															// EX)[protocol][TRUE]
-							System.out.println("[서버에게 받은 메세지]" + responeMessage);
-							int fileServerPort = Integer.valueOf(tokens[4]);
-							String fileServerIp = tokens[5];
+	                  /*------------------switch - case 문 시작 부분 --------------------------*/
+	                  switch (messageCode) {
+	                  
+	                     /* [101] 로그인결과응답 */
+	                     case MessageType.S_LOGIN_RESULT:
+	   
+	                        String connectionId = tokens[2]; // 로그인 요청 한 클라이언트의 닉네임                                    
+	                        String waitingList = tokens[3]; // 대기실에 접속 되어있는 클라이언트 목록.
+	                        String chatRoomLists = tokens[4];
+	                        System.out.println("[서버 답장 로그인결과응답 101] : " + responeMessage);
+	                        ui.getWaitRoomPanel().waitingList(waitingList); // 대기방 리스트에 출력하기위해 호출.
+	                        
+	                        if (ui.getUserLoginPanel().userId.equals(connectionId)) { // 자기 자신 이외의 클라이언트가  접속 할경우
+	                           if (!chatRoomLists.equals(null)) {
+	                              // String roomLists =
+	                              // "첫번째방,jo930408,1234,1,5,다들어와,비닝이,null,2,10,놀쟈,비닝이,null,2,10";
+	                              // //tokens[4]
+	                              String roomLists = chatRoomLists;
+	                              System.out.println(roomLists);
+	                              ui.getWaitRoomPanel().roomList(roomLists);
+	                              ui.cardOpen("waitRoom");
+	                           }
+	                        }
+	                        break;            
+	   
+	                     /* [103] 회원가입 응답 결과 */
+	                     case MessageType.S_JOIN_RESULT: // 103 회원가입응답
+	                        // System.out.println(responeMessage);
+	   
+	                        break;
+	   
+	                     /* [201] 채팅방 개설 결과 응답 */
+	                     case MessageType.S_OPEN_RESULT:
+	                        // System.out.println("[서버 답장 채팅방 개설 201]
+	                        // "+responeMessage);
+	                        if (resultResult("true")) {
+	                           ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT, responeMessage);
+	                           openChatRoom();
+	                        }
+	                        break;
+	   
+	                     /* [203] 비밀방 개설 응답 */
+	                     case MessageType.S_SECRET_RESULT:
+	                        System.out.println("[서버 답장 채팅방 개설203 비밀방] " + responeMessage);
+	                        if (resultResult("true")) {
+	                           // ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT,responeMessage);
+	                           openChatRoom();
+	                        }
+	                        break;
+	                     /**
+	                      * 입장 결과 쪽 211 , 213 할것 1) WaitingChatRoomPanel 클래스를
+	                      * 접근하여 chatRoomOpenS()메소드 호출 2) chatRoomOpenS()에서
+	                      */
+	   
+	                     /* [211] 채팅방 입장 결과 응답 */
+	                     case MessageType.S_ENTRY_RESULT:
+	                         String chatRoomResult;
+	                         System.out.println("[[211] 채팅방 입장 결과 응답]"+responeMessage);
+	   //                      openChatRoom();
+	                        // ui.getWaitRoomPanel().chtRoomOpenS(결과응답값); //결과
+	                        // 응답이 true이면 채팅화면을 열기위해 이메소드를 호출!!!
+	                        break;
+	                     /* [213] 비밀방 입장 결과 응답 */
+	                     case MessageType.S_SECRET_ENTRY_RESULT:
+	                        // System.out.printl n("[[213] 비밀방 입장 결과 응답]
+	                        // "+responeMessage);
+	                        // sys
+	                        break;
+	   
+	   
+	                     /* [300]채팅메세지 수신 결과 응답 */
+	                     case MessageType.SC_CHAT_MESSAGE:
+	                        String messageId = tokens[1];
+	                        String chatMessage = tokens[3];
+	                        ui.getChatRoomPanel().setMessage("[" + messageId + "] : " + chatMessage);
+	                        break;
+	   
+	                     /* [301] 이모티콘 송수신 응답 */
+	                     case MessageType.SC_CHAT_EMOTICON: //
+	                        String Id = tokens[1];
+	                        String filePath = tokens[3];
+	                        System.out.println(Id + filePath);
+	                        ui.getChatRoomPanel().setEmoticon("[" + Id + "] : " + filePath);
+	                        break;
+	                     /* [303] 초대 요청 */
+	                     case MessageType.C_INVITE_USER:
+	                    	 
+	                    	 break;
+	                     /* [309] 대기인 인원 요청 */
+	                     case MessageType.SC_REQUEST_WAITINGLIST:
+	                    	 
+//	                    	 ui.getChatRoomPanel().getWaitingList().
+	                    	 
+	                    	 break;
+	                        
+	                     /* [403] 파일 업로드 결과 응답 */
+	                     case MessageType.C_UPLOAD_RESULT: // 파일 업로드 결과
+	                                                // EX)[protocol][TRUE]
+	                        System.out.println("[서버에게 받은 메세지]" + responeMessage);
+	                        int fileServerPort = Integer.valueOf(tokens[4]);
+	                        String fileServerIp = tokens[5];
+	                        fileServerConnect(fileServerPort, fileServerIp);
+	                        break;      
+	                        
+	                     /* [500] 서버 공지 수신 결과 응답 */
+	                     case MessageType.S_NOTICE: 
+	                        System.out.println(responeMessage);
+	                        String admin = tokens[1];
+	                        String adminMessage = tokens[2].trim();
+	                        ui.getChatRoomPanel().noticeMessage("[" + admin + "] : " + adminMessage);
+	                        break;
+	                        
+	                     /* [501] 관리자의 귓속말 결과 응답 */
+	                     case MessageType.S_ADMIN_WHISPER: // 
+	                        System.out.println(responeMessage);
+	                        String adminW = tokens[1];
+	                        String adminWhiseper = tokens[2].trim();
+	                        ui.getChatRoomPanel().noticeWhisperMessage("[" + adminW + "]님의 귓속말 : " + adminWhiseper);
+	                        break;
+	                  }
+	               }
+	            } catch (IOException e) {
+	               System.out.println("서버가 종료되었습니다.");
+	            }
+	         }
+	      }.start();
 
-							fileServerConnect(fileServerPort, fileServerIp);
+	   }
 
-							break;
-
-						/* [103] 회원가입 응답 결과 */
-						case MessageType.S_JOIN_RESULT: // 103 회원가입응답
-							// System.out.println(responeMessage);
-
-							break;
-
-						/* [201] 채팅방 개설 결과 응답 */
-						case MessageType.S_OPEN_RESULT:
-							// System.out.println("[서버 답장 채팅방 개설 201]
-							// "+responeMessage);
-							if (resultResult("true")) {
-								ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT, responeMessage);
-								openChatRoom();
-							}
-							break;
-
-						/* [203] 비밀방 개설 응답 */
-						case MessageType.S_SECRET_RESULT:
-							System.out.println("[서버 답장 채팅방 개설203 비밀방] " + responeMessage);
-							System.out.println("ㅌ스트");
-							if (resultResult("true")) {
-								// ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT,responeMessage);
-								openChatRoom();
-							}
-							break;
-						/**
-						 * 입장 결과 쪽 211 , 213 할것 1) WaitingChatRoomPanel 클래스를
-						 * 접근하여 chatRoomOpenS()메소드 호출 2) chatRoomOpenS()에서
-						 */
-
-						/* [211] 채팅방 입장 결과 응답 */
-						case MessageType.S_ENTRY_RESULT:
-							 String chatRoomResult;
-							 System.out.println("[[211] 채팅방 입장 결과 응답]"+responeMessage);
-							 openChatRoom();
-							// ui.getWaitRoomPanel().chtRoomOpenS(결과응답값); //결과
-							// 응답이 true이면 채팅화면을 열기위해 이메소드를 호출!!!
-							break;
-						/* [213] 비밀방 입장 결과 응답 */
-						case MessageType.S_SECRET_ENTRY_RESULT:
-							// System.out.printl n("[[213] 비밀방 입장 결과 응답]
-							// "+responeMessage);
-							// sys
-							break;
-						/* [101] 로그인결과응답 */
-						case MessageType.S_LOGIN_RESULT:
-
-							String connectionId = tokens[2]; // 로그인 요청 한 클라이언트의
-																// 닉네임
-							String waitingList = tokens[3]; // 대기실에 접속 되어있는
-															// 클라이언트 목록.
-							String chatRoomLists = tokens[4];
-							System.out.println("[서버 답장 로그인결과응답 101] : " + responeMessage);
-
-							ui.getWaitRoomPanel().waitingList(waitingList); // 대기방
-																			// 리스트에
-																			// 출력하기위해
-																			// 호출.
-
-							if (ui.getUserLoginPanel().userId.equals(connectionId)) { // 자기
-																						// 자신
-																						// 이외의
-																						// 클라이언트가
-																						// 접속
-																						// 할경우
-								if (!chatRoomLists.equals(null)) {
-									// String roomLists =
-									// "첫번째방,jo930408,1234,1,5,다들어와,비닝이,null,2,10,놀쟈,비닝이,null,2,10";
-									// //tokens[4]
-									String roomLists = chatRoomLists;
-									System.out.println(roomLists);
-									ui.getWaitRoomPanel().roomList(roomLists);
-									ui.cardOpen("waitRoom");
-								}
-							}
-							break;
-
-						/* [300]채팅메세지 수신 결과 응답 */
-						case MessageType.SC_CHAT_MESSAGE:
-							String messageId = tokens[1];
-							String chatMessage = tokens[3];
-							ui.getChatRoomPanel().setMessage("[" + messageId + "] : " + chatMessage);
-							break;
-
-						/* [301] 이모티콘 송수신 응답 */
-						case MessageType.SC_CHAT_EMOTICON: //
-							String Id = tokens[1];
-							String filePath = tokens[3];
-							System.out.println(Id + filePath);
-							ui.getChatRoomPanel().setEmoticon("[" + Id + "] : " + filePath);
-							break;
-
-						case MessageType.S_NOTICE: // [500] 서버 공지 수신
-							System.out.println(responeMessage);
-							String admin = tokens[1];
-							String adminMessage = tokens[2].trim();
-							ui.getChatRoomPanel().noticeMessage("[" + admin + "] : " + adminMessage);
-							break;
-
-						case MessageType.S_ADMIN_WHISPER: // [501] 관리자의 귓속말
-							System.out.println(responeMessage);
-							String adminW = tokens[1];
-							String adminWhiseper = tokens[2].trim();
-							ui.getChatRoomPanel().noticeWhisperMessage("[" + adminW + "]님의 귓속말 : " + adminWhiseper);
-							break;
-
-						}
-					}
-				} catch (IOException e) {
-					System.out.println("서버가 종료되었습니다.");
-				}
-			}
-		}.start();
-
-	}
-
+	   
 	public void openChatRoom() {
 		ui.setSize(1000, 700);
 		GUIUtil.setCenterScreen(ui);

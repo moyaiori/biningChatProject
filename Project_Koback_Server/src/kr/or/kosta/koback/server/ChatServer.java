@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import kr.or.kosta.koback.model.ClientsManager;
 import kr.or.kosta.koback.model.RoomManager;
 import kr.or.kosta.koback.server.ChatService;
-import kr.or.kosta.koback.view.CenterPanel;
 import kr.or.kosta.koback.view.ServerFrame;
 
 /**
@@ -58,8 +58,7 @@ public class ChatServer {
 			InetAddress ia = socket.getInetAddress(); // socket(클라이언트)의
 														// 정보(port,ip 등)을 알아내기
 														// 위함
-		
-			serverFrame.getCenterPanel().getLogTA().append("[" + ia.getHostAddress() + "] 채팅 클라이언트가 접속\r\n");
+			serverFrame.getCenterPanel().getLogTA().append(String.format("%1$tF %1$tT", Calendar.getInstance()) + " : [" + ia.getHostAddress() + "] 채팅 클라이언트가 접속\r\n");
 			roomManager.addWatingRoom();
 			ChatService chatService = new ChatService(socket, this, serverFrame.getCenterPanel().getUserModel(),
 					serverFrame.getSouthPanel().getModel(), roomManager);

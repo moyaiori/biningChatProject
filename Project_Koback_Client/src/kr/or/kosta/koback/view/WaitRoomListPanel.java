@@ -31,12 +31,12 @@ import kr.or.kosta.koback.util.GUIUtil;
  *         - 추가 1)방 개설
  * 
  * */
-public class WaitRoomPanel extends JPanel {
+public class WaitRoomListPanel extends JPanel {
 
 	private static final int CHAT_ITEM_BODER_X = 20;
 	private static final int CHAT_ITEM_BODER_Y = 20;
 
-	WaitRoomPanel waitRoomPanel;
+	WaitRoomListPanel waitRoomListPanel;
 	// --------------- 대기실 Center 컴포넌트--------------
 	JPanel centerP; // 중앙 패널(리스트와 상단 레이블)
 	JPanel roomP; // 리스트에 각각의 방
@@ -53,9 +53,9 @@ public class WaitRoomPanel extends JPanel {
 	ChatUI chatUI;
 	ArrayList<JPanel> watingRoomList;
 
-	public WaitRoomPanel(ChatUI chatUI) {
+	public WaitRoomListPanel(ChatUI chatUI) {
 		this.chatUI = chatUI;
-		waitRoomPanel = this;
+		waitRoomListPanel = this;
 		centerP = new JPanel();
 		roomP = new JPanel();
 		northL = new JLabel("현재 개설되어있는 채팅방");
@@ -225,12 +225,12 @@ public class WaitRoomPanel extends JPanel {
 		// chatRoomOpen
 	}*/
 
-	public WaitRoomPanel getWaitRoomPanel() {
+	public WaitRoomListPanel getWaitRoomPanel() {
 		return this;
 	}
 
-	public void setUi(WaitRoomPanel waitRoomPanel) {
-		this.waitRoomPanel = waitRoomPanel;
+	public void setUi(WaitRoomListPanel waitRoomListPanel) {
+		this.waitRoomListPanel = waitRoomListPanel;
 	}
 	
 	public void getRoomNum(int roomNum){

@@ -20,18 +20,13 @@ import kr.or.kosta.koback.common.MessageType;
  *  클래스 역할 :카드레이아웃을이용하여 프레임 구현 (로그인 - 대기실 - 채팅방)
  *  화면 구현 : 조현빈 (2015 02 19 (오후 2시))
  *  
- *  추가 구현 : 조현빈
- *    추가사항 (2015-08-20)
- *    1. eventRegist() 메소드
- *         - 추가 1)최초 서버와 연결
- *  
  * */
 public class ChatUI extends JFrame {
 	
 	private CardLayout cardLayout;
 	private UserLoginPanel userLoginPanel;
 	private ChatRoomPanel chatRoomPanel;
-	private WaitRoomPanel waitRoomPanel;
+	private WaitRoomListPanel waitRoomPanel;
 	private JPanel cardP;
 	private ChatClient chatClient;
 //	private static final String serverIP = "127.0.0.1";	////192.168.0.28
@@ -53,7 +48,7 @@ public class ChatUI extends JFrame {
 		
 		userLoginPanel = new UserLoginPanel(this);
 		chatRoomPanel = new ChatRoomPanel(this);
-		waitRoomPanel = new WaitRoomPanel(this);
+		waitRoomPanel = new WaitRoomListPanel(this);
 		cardP = new JPanel();
 		
 		setComponents();
@@ -164,11 +159,11 @@ public class ChatUI extends JFrame {
 		this.chatRoomPanel = chatRoomPanel;
 	}
 
-	public WaitRoomPanel getWaitRoomPanel() {
+	public WaitRoomListPanel getWaitRoomPanel() {
 		return waitRoomPanel;
 	}
 
-	public void setWaitRoomPanel(WaitRoomPanel waitRoomPanel) {
+	public void setWaitRoomPanel(WaitRoomListPanel waitRoomPanel) {
 		this.waitRoomPanel = waitRoomPanel;
 	}
 
