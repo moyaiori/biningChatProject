@@ -3,6 +3,7 @@ package kr.or.kosta.koback.view;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -33,7 +34,7 @@ public class ServerFrame extends JFrame {
 		GUIUtil.setCenterScreen(this);
 		GUIUtil.setLookAndFeel(this, GUIUtil.THEME_NIMBUS);
 //	    serverFrame.setUndecorated(true);
-		getCenterPanel().getLogTA().append("KobackServer Start!!+\r\n");
+		getCenterPanel().getLogTA().append(String.format("%1$tF %1$tT", Calendar.getInstance()) + " : KobackServer Start!!+\r\n");
 	    setVisible(true);
 		setComponents();
 		setEvent();
@@ -57,8 +58,8 @@ public class ServerFrame extends JFrame {
 				southPanel.getAdminTF().requestFocus();
 			}
 		});
-		
 	}
+	
 //	 /** 종료 메소드 */
 	public void exit(){
 		setVisible(false);

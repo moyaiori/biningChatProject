@@ -49,20 +49,14 @@ public class roomTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object cellData = null;
 		switch (columnIndex) {
-			/** 악기 종류 */
+			/** 방 번호 */
 			case 0:
 				break;
-			/** 일렬 번호 */
+			/** 방 제목 */
 			case 1: 
 				break;
-			/** 모델 이름 */
+			/** 방장 이름 */
 			case 2: 
-				break;
-			/** 가격 */
-			case 3: 
-				break;
-			/** 제조사 */
-			case 4:
 				break;
 		}
 		return cellData;

@@ -88,6 +88,11 @@ public class WaitingChatRoomPanel extends JPanel {
 			/*chatUI.getChatClient().sendMessage(MessageType.C_SECRET_ENTRY + MessageType.DELIMETER +
 												connecionId+MessageType.DELIMETER+roomNum+MessageType.DELIMETER+roomPass);*/
 		
+		if((Validator.isNull(room.getPasswd()))){
+			// TODO "비밀번호를 입력하지않으면 일반방으로 생성됩니다" 표시 해주기
+			// 일방반 생성 요청
+			chatUI.getChatClient().sendMessage(MessageType.C_ENTRY + MessageType.DELIMETER +
+					connecionId+MessageType.DELIMETER+roomNum);
 		}else{
 			/*[210] 일반 방 입장 요청 			210|아이디|방번호|비밀번호 */
 			chatUI.getChatClient().sendMessage(MessageType.C_SECRET_ENTRY + MessageType.DELIMETER +
