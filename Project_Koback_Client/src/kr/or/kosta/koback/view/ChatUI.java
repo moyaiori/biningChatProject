@@ -90,7 +90,7 @@ public class ChatUI extends JFrame {
 						try {
 							chatClient.connect();
 							//최초 연결시 닉네임 전송.(100|*|아이디)
-							chatClient.sendMessage(MessageType.C_INITIAL_CONNECT+MessageType.DELIMETER);
+							chatClient.sendMessage(MessageType.C_INITIAL_CONNECT+MessageType.DELIMETER+"connect");
 						} catch (IOException ex) {
 							String erreorMessage = "아래와 같은 예외가 발생하여 서버를 구동 할 수 없습니다.\r\n"+ex.toString();
 							JOptionPane.showMessageDialog(null, erreorMessage,"연결실패",JOptionPane.ERROR_MESSAGE);
