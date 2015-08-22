@@ -17,7 +17,7 @@ import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.FileDao;
 import kr.or.kosta.koback.util.GUIUtil;
 import kr.or.kosta.koback.view.ChatUI;
-import kr.or.kosta.koback.view.WaitRoomPanel;
+import kr.or.kosta.koback.view.WaitRoomListPanel;
 
 public class ChatClient {
 
@@ -114,9 +114,8 @@ public class ChatClient {
 						case MessageType.S_ENTRY_RESULT:
 							 String chatRoomResult;
 							 System.out.println("[[211] 채팅방 입장 결과 응답]"+responeMessage);
-							 openChatRoom();
-							// ui.getWaitRoomPanel().chtRoomOpenS(결과응답값); //결과
-							// 응답이 true이면 채팅화면을 열기위해 이메소드를 호출!!!
+							 
+							 
 							break;
 						/* [213] 비밀방 입장 결과 응답 */
 						case MessageType.S_SECRET_ENTRY_RESULT:
