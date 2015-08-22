@@ -5,10 +5,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -18,12 +14,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public class InviteBtnPanel extends JFrame {
+public class kickBtnPanel extends JFrame {
 
-	JPanel inviteP; //초대버튼을 누르면 방장에게 보여지는 패널
+	JPanel kickP; //초대버튼을 누르면 방장에게 보여지는 패널
 	JLabel choiceL; //상단 "초대할 사람을 선택하세요"
 	JList<String> userList; // 대기실 유저 리스트
-	JButton inviteB, cancelB; //초대버튼과 취소버튼
+	JButton kickB, cancelB; //초대버튼과 취소버튼
 	DefaultListModel<String> model;
 	
 	GridBagLayout grid;
@@ -33,13 +29,13 @@ public class InviteBtnPanel extends JFrame {
 	
 	
 	
-	public InviteBtnPanel(ChatUI chatUI){
+	public kickBtnPanel(ChatUI chatUI){
 		this.chatUI = chatUI;
-		inviteP = new JPanel();
+		kickP = new JPanel();
 		
 		
-		choiceL = new JLabel("초대할 사람을 선택하세요");
-		inviteB = new JButton("초대");
+		choiceL = new JLabel("강퇴 하시겠습니까?");
+		kickB = new JButton("확인");
 		cancelB = new JButton("취소");
 
 		model = new DefaultListModel<String>();
@@ -49,7 +45,6 @@ public class InviteBtnPanel extends JFrame {
 		cons = new GridBagConstraints();
 		
 		setComponents();
-		eventRegist();
 		
 		
 	}
@@ -69,22 +64,18 @@ public class InviteBtnPanel extends JFrame {
 	    add(new JLabel(""), 0, 3, 1, 1, 0.0, 0.0);
 	    add(sp, 			1, 3, 10, 5, 0.0, 0.0);
 	    add(new JLabel(""), 9, 2, 5, 1, 0.0, 0.0);
-	    add(inviteB,		1, 10, 1, 1, 0.05, 0.0);
+	    add(kickB,		1, 10, 1, 1, 0.05, 0.0);
 	    add(new JLabel(""), 3, 10, 2, 1, 0.0, 0.0);
 	    add(cancelB,		5, 10, 1, 1, 0.05, 0.0);
 	  
 	    
+	    
 	}
 	
-	 public void inviteUserList(){
-		 
-//	      String[] list = {"가승호(eifwljef)", "용용", "비닝이"};
-//	      for (String string : list) {
-//	         model.addElement(string);
-//	      }
+	 public void kickUserList(){
+//		채팅방에 있는 유저 리스트 출력 
+
 	   }
-	 
-	 
 	
 	 /*gridBagLayout에 컴포넌트 추가 메소드*/
 	   private void add(Component component, int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty){
@@ -97,36 +88,6 @@ public class InviteBtnPanel extends JFrame {
 	      grid.setConstraints(component, cons);
 	      add(component);
 	   }
-
-		public void exit() {
-			setVisible(false);
-			dispose();
-			System.exit(0);
-		}
-	   
-	   public void eventRegist(){
-		   
-		   addWindowListener(new WindowAdapter() {
-			   @Override
-			public void windowClosing(WindowEvent e) {
-
-				   exit();
-			}
-		});
-		   
-		   cancelB.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				exit();
-				
-			}
-		});
-		   
-		   
-	   }
-	   
-	   
 	
 	
 	

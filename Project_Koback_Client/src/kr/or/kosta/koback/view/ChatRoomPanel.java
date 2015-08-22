@@ -53,6 +53,7 @@ public class ChatRoomPanel extends JPanel {
    UserFileFrame userFileFrame;
    
    InviteBtnPanel invitePopUp;
+   kickBtnPanel kickPopUp;
    
    StringBuilder sb;
 
@@ -126,20 +127,31 @@ public class ChatRoomPanel extends JPanel {
       add(sendB,         6,5,1,1,0,0);      //전송 버튼 
       
 //    일단 명시적으로 써놓음. 추후 LIST 로 받아와야함 
-      choiceCB.addItem("전체");
-      choiceCB.addItem("비닝이");
-      choiceCB.addItem("후로개");
+      
 
       
-      chatUserList();
+//      chatUserList();
    }
- 
+   
+   /** 채팅방 유저 리스트  */
+   public void chatUserList(String chatUserList){
+      String users = chatUserList;
+      
+      String user[] = users.split(",");
+      model.clear();
+      for (String nickName : user) {
+         model.addElement(nickName);
+      }
+   }
+   
+   /*
    public void chatUserList(){
       String[] list = {"가승호(eifwljef)", "용용", "비닝이"};
       for (String string : list) {
          model.addElement(string);
       }
    }
+   */
    
    
    /*gridBagLayout에 컴포넌트 추가 메소드*/
@@ -153,6 +165,8 @@ public class ChatRoomPanel extends JPanel {
       gridBagLayout.setConstraints(component, gridBagConstraints);
       add(component);
    }
+   
+   
    /** 채팅 메시지 송신 기능 */
    public void setChatMessage(){
       String message = messageTF.getText();
@@ -174,29 +188,23 @@ public class ChatRoomPanel extends JPanel {
       
    }
    
+   
+   
    /** 일반 메시지 출력 */
    public void setMessage(String message){
       System.out.println("셋메시지 부분 : " + message);
-      /*
-      StyledDocument doc = chatTextTP.getStyledDocument();
-      Style style = chatTextTP.addStyle("style", null);
-      StyleConstants.setForeground(style, Color.RED);
-      
-      try {
-         doc.insertString(doc.getLength(), message, style);
-      } catch (BadLocationException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      */
+
       sb.append(message+"\r\n");
       chatTextTP.setText(sb.toString()); 
    }
+   
+   
    
    /** 이모티콘 송신 기능 */
    public void setChatEmoticon(String filePath){
 //      System.out.println(filePath);
 //      String filePath = chatUI.getChatRoomPanel().emoticonButtons.getFilePath();
+	   
       try {
          String id = chatUI.getUserLoginPanel().userId;
          chatUI.getChatClient().sendMessage(MessageType.SC_CHAT_EMOTICON + MessageType.DELIMETER + id + MessageType.DELIMETER + 1+ MessageType.DELIMETER + filePath);
@@ -208,13 +216,30 @@ public class ChatRoomPanel extends JPanel {
    
    /** 화면에 이모티콘 출력 */
    public void setEmoticon(String filePath){
-      System.out.println("룸패널 셋이모티콘 부분 " + filePath);
+	   
+	   String id = chatUI.getUserLoginPanel().userId;
+	   System.out.println(id);
+	   System.out.println("룸패널 셋이모티콘 부분 " + filePath);
       ImageIcon icon = new ImageIcon(filePath);
 //      JLabel image = new JLabel(icon + "\n");
 //      chatTextTP.insertComponent(new JLabel(icon));
+      chatTextTP.insertComponent(new JLabel(id));
       chatTextTP.insertIcon(icon);
-      
+      setEndIcon();
    }
+   
+   /** 이모티콘 출력시 다음줄에 출력하게 하는 메소드 */
+  private void setEndIcon(){
+	 setEndLine();
+	 chatTextTP.replaceSelection("\n");
+	 setEndLine();
+  }
+  
+  //문장의 끝으로 이동하게 하기.
+  private void setEndLine(){
+	  chatTextTP.selectAll();
+	  chatTextTP.setSelectionStart(chatTextTP.getSelectionEnd());
+  }
    
    
    /**공지사항 메시지 출력 */
@@ -228,7 +253,6 @@ public class ChatRoomPanel extends JPanel {
 	      try {
 	         doc.insertString(doc.getLength(), notice + "\r\n" , style);
 	      } catch (BadLocationException e) {
-	         // TODO Auto-generated catch block
 	         e.printStackTrace();
 	      }
 	      
@@ -244,25 +268,10 @@ public class ChatRoomPanel extends JPanel {
 	      try {
 	         doc.insertString(doc.getLength(), noticeWhisper + "\r\n" , style);
 	      } catch (BadLocationException e) {
-	         // TODO Auto-generated catch block
 	         e.printStackTrace();
 	      }
 	      
    }
-   
-   
-   
-   /** 채팅방 유저 리스트 출력 */
-   public void chatUserList(String chatUserList){
-      String users = chatUserList;
-      
-      String user[] = users.split(",");
-      model.clear();
-      for (String nickName : user) {
-         model.addElement(nickName);
-      }
-   }
-   
    
    
    /** 사용자 선택 */
@@ -284,8 +293,6 @@ public class ChatRoomPanel extends JPanel {
          FileFrameOpen();
          
       }
-      
-      
    });
       
       /** 전송 버튼 눌렀을 경우 채팅 메시지 전송되는 이벤트 */
@@ -294,7 +301,7 @@ public class ChatRoomPanel extends JPanel {
          public void actionPerformed(ActionEvent e) {
             setChatMessage();
          }
-      });
+      }); 
       
       /** 전송버튼을 누르지 않고 엔터치면 메시지 전송*/
       messageTF.addActionListener(new ActionListener() {
@@ -315,7 +322,6 @@ public class ChatRoomPanel extends JPanel {
                   toggle = false;
                   emoticon.setVisible(false);
                   emoticon.dispose();
-                  
                }else{
                   toggle = true;
                   EmoticonOpen(emoticon);
@@ -329,8 +335,7 @@ public class ChatRoomPanel extends JPanel {
       kickB.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
-               
-            JOptionPane.showConfirmDialog(null, "강퇴할래?", "강퇴확인", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        	KickFramOpen();
          }
       });
       
@@ -344,7 +349,22 @@ public class ChatRoomPanel extends JPanel {
       });
       
       
+      
+      
    }
+   
+   /** 채팅창 내 버튼을 누르면 화면에 보여지는
+    *  프레임들을 불러오는 메소드들 
+    */
+   
+   public void KickFramOpen(){
+	   kickPopUp = new kickBtnPanel(chatUI);
+	   GUIUtil.setLookAndFeel(kickPopUp, GUIUtil.THEME_NIMBUS);
+       GUIUtil.setCenterScreen(kickPopUp);
+       kickPopUp.setSize(300, 300);
+       kickPopUp.setVisible(true);
+   }
+   
    
    public void InviteFrameOpen(){
        invitePopUp = new InviteBtnPanel(chatUI);

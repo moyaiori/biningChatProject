@@ -4,6 +4,10 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -75,7 +79,32 @@ public class InvitePanel extends JFrame {
 	      
 	      add(com); // 컴포넌트를 Panel에 부착한다.
 	   }
-	
+
+		public void exit() {
+			setVisible(false);
+			dispose();
+			System.exit(0);
+		}
+		
+	   public void eventRegist(){
+		 
+		   addWindowListener(new WindowAdapter() {
+			   @Override
+			public void windowClosed(WindowEvent e) {
+				exit();
+			}
+		});
+		   
+		   cancelB.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exit();	
+			}
+		});
+		
+		   
+	   }
 	
 	public static void main(String[] args) {
 		InvitePanel frame = new InvitePanel();
@@ -84,6 +113,7 @@ public class InvitePanel extends JFrame {
 		GUIUtil.setCenterScreen(frame);
 		frame.setComponents();
 		frame.setVisible(true);
+		frame.eventRegist();
 	}
 
 
