@@ -76,22 +76,27 @@ public class WaitingChatRoomPanel extends JPanel {
 	public void chatRoomOpenC() throws IOException{
 		waitRoomPanel.getRoomNum(roomNum); //이거지워도되는건지...?? 
 		String connecionId = UserLoginPanel.userId;
-		int roomNum = room.getRoomNum();		// 클릭한 방번호
+		int roomNum = room.getRoomNum();
+		//JOptionPane.showMessageDialog(null, erreorMessage,"연결실패",JOptionPane.ERROR_MESSAGE);
 		System.out.println("방번호"+room.getRoomNum()+"  "+room.getPasswd());
+		/*[212] 비밀 방 입장을 요청.*/
+//		if(!(room.getPasswd().equals(null))){
 		
-		if(!(Validator.isNull( room.getPasswd()))){
-			// TODO "비밀번호를 입력하지않으면 일반방으로 생성됩니다" 표시 해주기
-			// 일방반 생성 요청
-			chatUI.getChatClient().sendMessage(MessageType.C_ENTRY + MessageType.DELIMETER +
-					connecionId+MessageType.DELIMETER+roomNum);
+		if(!(room.getPasswd().equals("없음"))){
+			String roomPass = JOptionPane.showInputDialog("방 비밀번호를 입력해주세요.");
+			/* 212|아이디|방번호|비밀번호   */
+			/*chatUI.getChatClient().sendMessage(MessageType.C_SECRET_ENTRY + MessageType.DELIMETER +
+												connecionId+MessageType.DELIMETER+roomNum+MessageType.DELIMETER+roomPass);*/
+		
 		}else{
-			System.out.println("비밀방 생성");
-			//TODO 옵션패널에서 비밀번호 가져오기
-			// 비밀방 입장 ,, 
-//			chatUI.getChatClient().sendMessage(MessageType.C_SECRET_ENTRY + MessageType.DELIMETER +
-//											connecionId+MessageType.DELIMETER+roomNum+MessageType.DELIMETER+);
+			/*[210] 일반 방 입장 요청 			210|아이디|방번호|비밀번호 */
+			chatUI.getChatClient().sendMessage(MessageType.C_SECRET_ENTRY + MessageType.DELIMETER +
+											connecionId+MessageType.DELIMETER+roomNum);
 		}
+		
+	    
 	}
+	
 	public void chatRoomOpenS(boolean roomOpenResult){	
 		if(roomOpenResult){//roomOpenResult: true이면 채팅방 열기
 			/*이 두줄이 화면을 열어주는 부분.*/

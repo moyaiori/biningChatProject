@@ -99,7 +99,6 @@ public class ChatClient {
 						/* [203] 비밀방 개설 응답 */
 						case MessageType.S_SECRET_RESULT:
 							System.out.println("[서버 답장 채팅방 개설203 비밀방] " + responeMessage);
-							System.out.println("ㅌ스트");
 							if (resultResult("true")) {
 								// ui.getWaitRoomPanel().roomResult(MessageType.S_OPEN_RESULT,responeMessage);
 								openChatRoom();
