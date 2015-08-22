@@ -79,7 +79,7 @@ public class WaitingChatRoomPanel extends JPanel {
 		int roomNum = room.getRoomNum();		// 클릭한 방번호
 		System.out.println("방번호"+room.getRoomNum()+"  "+room.getPasswd());
 		
-		if(!(Validator.isNull( room.getPasswd()))){
+		if((Validator.isNull(room.getPasswd()))){
 			// TODO "비밀번호를 입력하지않으면 일반방으로 생성됩니다" 표시 해주기
 			// 일방반 생성 요청
 			chatUI.getChatClient().sendMessage(MessageType.C_ENTRY + MessageType.DELIMETER +
