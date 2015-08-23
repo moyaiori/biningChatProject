@@ -19,7 +19,6 @@ public class EmoticonButtons {
 	public EmoticonButtons(String filePath) {
 		this.filePath = filePath;
 	}
-
 	public String getFilePath() {
 		return filePath;
 	}

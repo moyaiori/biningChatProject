@@ -127,9 +127,6 @@ public class ChatRoomPanel extends JPanel {
 		g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
 	}
 
-
-
-
 	public void chatRoomList(String chatRoomList) {
 		String users = chatRoomList;
 
@@ -243,23 +240,23 @@ public class ChatRoomPanel extends JPanel {
 		}
 	}
 
-	   /** 화면에 이모티콘 출력 */
-    public void setEmoticon(String filePath){
-       String id = chatUI.getUserLoginPanel().userId;
-       ImageIcon icon = new ImageIcon(filePath);
-       setEndIcon();
-       chatTextTP.insertComponent(new JLabel("["+id+"] :" ));
-       setEndLine();
-       chatTextTP.insertIcon(icon);
-       setEndIcon();
-       try {
-       doc.insertString(doc.getLength(), "\r\n", style);
-    } catch (BadLocationException e) {
-       // TODO Auto-generated catch block
-       e.printStackTrace();
-    }
-//       System.out.println("ㅇl모티콘 출력중");
-    }
+	/** 화면에 이모티콘 출력 */
+	public void setEmoticon(String filePath) {
+		String id = chatUI.getUserLoginPanel().userId;
+		ImageIcon icon = new ImageIcon(filePath);
+		setEndIcon();
+		chatTextTP.insertComponent(new JLabel("[" + id + "] :"));
+		setEndLine();
+		chatTextTP.insertIcon(icon);
+		setEndIcon();
+		try {
+			doc.insertString(doc.getLength(), "\r\n", style);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// System.out.println("ㅇl모티콘 출력중");
+	}
 
 	/** 이모티콘 출력시 다음줄에 출력하게 하는 메소드 */
 	private void setEndIcon() {
@@ -457,6 +454,18 @@ public class ChatRoomPanel extends JPanel {
 		invitePanel.setVisible(true);
 	}
 
+	/* 초대를 수락한 경우 */
+	public void acceptInvite(String inviteUser) {
+		String message = inviteUser + "님께서 초대를 수락하셧습니다.";
+		JOptionPane.showMessageDialog(null, message);
+	}
+
+	/* 초대를 거절한 경우 */
+	public void refusalInvite(String inviteUser) {
+		String message = inviteUser + "님께서 초대를 수락하셧습니다.";
+		JOptionPane.showMessageDialog(null, message);
+	}
+
 	// 대기실 인원 0 일경우
 	public void InviteFrameisEmpty() {
 		String erreorMessage = "초대할수있는 사람이 없습니다.\r\n";
@@ -504,11 +513,11 @@ public class ChatRoomPanel extends JPanel {
 	public void setChatUI(ChatUI chatUI) {
 		this.chatUI = chatUI;
 	}
-	
+
 	public void setWaitingList(ArrayList<String> waitingList) {
 		this.waitingList = waitingList;
 	}
-	
+
 	public ArrayList<String> getWaitingList() {
 		return waitingList;
 	}

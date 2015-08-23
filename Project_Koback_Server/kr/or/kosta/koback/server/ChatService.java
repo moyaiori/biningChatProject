@@ -22,6 +22,7 @@ import kr.or.kosta.koback.view.roomTableModel;
 
 /**
  * 채팅 클라이언트의 요청메시지를 수신하여 서비스 제공 핵심 기능 담당(모든 프로토콜 메세지를 송수신)
+ * 
  * @author 유안상
  */
 public class ChatService extends Thread {
@@ -37,7 +38,7 @@ public class ChatService extends Thread {
 
 	private String[] allUser;
 	private String idList;
-	
+
 	protected UserModel userModel;
 	protected DefaultComboBoxModel<String> cbModel;
 
@@ -74,18 +75,18 @@ public class ChatService extends Thread {
 				String idList = chatServer.getManager().getAllId();
 
 				switch (requestCode) {
-				case MessageType.C_LOGIN:		// [100] 로그인 요청
+				case MessageType.C_LOGIN: // [100] 로그인 요청
 					String passwd = token[2];
 					protocolMethod.login(requestUserId, passwd, this);
 					break;
-				case MessageType.C_JOIN:		// [102] 회원가입 승인 요청
+				case MessageType.C_JOIN: // [102] 회원가입 승인 요청
 					String name = token[2];
 					String nick = token[3];
 					String pass = token[4];
 					String ssn = token[5];
 					String email = token[6];
 					String phoneNum = token[7];
-					if(joinCheck(requestUserId, name, nick, pass, ssn, email, phoneNum)){
+					if (joinCheck(requestUserId, name, nick, pass, ssn, email, phoneNum)) {
 						userDao.addUser(new User(requestUserId, name, nick, pass, ssn, email, phoneNum));
 						sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + requestUserId
 								+ MessageType.DELIMETER + true);
@@ -107,7 +108,7 @@ public class ChatService extends Thread {
 					String eRoomName = token[3];
 					protocolMethod.entryRoom(requestUserId, roomNum, eRoomName, this);
 					break;
-				case MessageType.C_SECRET_ENTRY: //[212] 비밀 방 입장 요청
+				case MessageType.C_SECRET_ENTRY: // [212] 비밀 방 입장 요청
 					int sRoomNum = Integer.parseInt(token[2]);
 					String entryPass = token[3];
 					String esRoomName = token[4];
@@ -119,7 +120,9 @@ public class ChatService extends Thread {
 					userModel.logoutUser(requestUserId);
 					cbModel.removeElement(requestUserId);
 					String userList = protocolMethod.waitUserList();
-					chatServer.sendWaitMessage(MessageType.S_REQUEST_WAITING_LIST+MessageType.DELIMETER+userList); // 나가는 아이 알려줌
+					chatServer.sendWaitMessage(MessageType.S_REQUEST_WAITING_LIST + MessageType.DELIMETER + userList); // 나가는
+																														// 아이
+																														// 알려줌
 					break;
 				// 300번대(채팅 방 메시지관련)
 				case MessageType.SC_CHAT_MESSAGE: // [300] 방에 있는 사람끼리 일반메시지 보내기
@@ -131,7 +134,8 @@ public class ChatService extends Thread {
 					chatServer.sendChatRoomMessage(requestMessage, roomNumber);
 					break;
 				case MessageType.SC_WHISPER: // [302] 귓속말 보내기
-					int whisperRoomNum = Integer.parseInt(token[2]); // 귓속말주고받는 방 번호
+					int whisperRoomNum = Integer.parseInt(token[2]); // 귓속말주고받는
+																		// 방 번호
 					String whisperOpponent = token[3]; // 귓속말 받는 상대의 아이디
 					String message = token[4]; // 귓속말 내용
 					chatServer.commonWhisperMessage(message, whisperOpponent, whisperRoomNum);
@@ -140,46 +144,44 @@ public class ChatService extends Thread {
 					String masterId = token[1]; // 초대하고자하는사람
 					String inviteRoomNum = token[2];// 대기실인지 확인 -> 0으로 보내야한다;
 					String inviteUser = token[3];// 대기실인지 확인 -> 0으로 보내야한다;
-					chatServer.sendInviteRequest(masterId, inviteRoomNum, roomManager.getRoomList().get(0).getClients().get(inviteUser));
+					chatServer.sendInviteRequest(masterId, inviteRoomNum,
+							roomManager.getRoomList().get(0).getClients().get(inviteUser));
 					break;
-					
+
 				case MessageType.S_INVITE_RESULT: // [304]초대에 대한 응답
-					inviteUser = token[1];		// 초대에 대한 응답한 유저 ID
-					masterId = token[2];		// 이 초대를 보낸 유저 ID
-					String isInvite = token[3];		// 초대에 대한 승락 or 거절
-					System.out.println("inviteUser : " + token[1]);
-					System.out.println("masterId : " + token[2]);
-					System.out.println("isInvite : " + token[3]);
-					
-					
-					
+					inviteUser = token[1]; // 초대에 대한 응답한 유저 ID
+					masterId = token[2]; // 이 초대를 보낸 유저 ID
+					String isInvite = token[3]; // 초대에 대한 승락 or 거절
 					if (isInvite.equals("true")) {
-						// 유저 입장
-						
-					}else{
-						
+						// 유저 수락
+						isInvite = "true";
+						chatServer.isSendInviteRequest(inviteUser, masterId, isInvite);
+					} else {
+						isInvite = "false";
+						chatServer.isSendInviteRequest(inviteUser, masterId, isInvite);
 					}
-					
-//					chatServer.
-					
 					break;
 				case MessageType.C_KICK: // [307] 방장이 해당유저를 강퇴시킴
 					int kickRoomNum = Integer.parseInt(token[2]);
 					String kickId = token[3];
-					ChatService client = roomManager.getRoomList().get(kickRoomNum).getClients().get(kickId); // 강퇴당할 아이의 chatService
+					ChatService client = roomManager.getRoomList().get(kickRoomNum).getClients().get(kickId); // 강퇴당할
+																												// 아이의
+																												// chatService
 					protocolMethod.exitRoom(kickId, kickRoomNum, client);
 					break;
 				case MessageType.SC_EXIT: // [308] 해당방에서 나감
 					int exitRoomNum = Integer.parseInt(token[2]);
 					protocolMethod.exitRoom(requestUserId, exitRoomNum, this);
 					break;
-				case MessageType.SC_REQUEST_WAITING_LIST: //[309] 대기실 유저 리스트 요청
+				case MessageType.SC_REQUEST_WAITING_LIST: // [309] 대기실 유저 리스트 요청
 					String waitUserList = protocolMethod.waitUserList();
-					sendMessage(MessageType.SC_REQUEST_WAITING_LIST + MessageType.DELIMETER + requestUserId + MessageType.DELIMETER + waitUserList);
+					sendMessage(MessageType.SC_REQUEST_WAITING_LIST + MessageType.DELIMETER + requestUserId
+							+ MessageType.DELIMETER + waitUserList);
 					break;
 				case MessageType.SC_REQUEST_WAITING_ROOMLIST: // [310] 대기실 요청
 					String roomList = protocolMethod.sendRoomList();
-					sendMessage(MessageType.SC_REQUEST_WAITING_ROOMLIST + MessageType.DELIMETER + requestUserId + MessageType.DELIMETER + roomList);
+					sendMessage(MessageType.SC_REQUEST_WAITING_ROOMLIST + MessageType.DELIMETER + requestUserId
+							+ MessageType.DELIMETER + roomList);
 					break;
 				// case MessageType.C_UPLOAD:
 				// System.out.println(requestMessage);
@@ -211,6 +213,7 @@ public class ChatService extends Thread {
 				socket.close();
 		}
 	}
+
 	public void setEvent() {
 		chatServer.getServerFrame().getSouthPanel().getAdminTF().addActionListener(new ActionListener() {
 			@Override
@@ -266,62 +269,62 @@ public class ChatService extends Thread {
 	}
 
 	public boolean joinCheck(String id, String name, String nick, String pass, String ssn, String email,
-            String phoneNum) throws IOException {
-         /** ID유효성검사 */
-         if (id.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-         } else if (userDao.overlapId(id)) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.DUPLICATE_ID);
-            return false; 
-            /** 닉네임 유효성검사 */
-         } else if (userDao.overlapNick(nick)) {
-            
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.DUPLICATE_NICK);
-            return false;  
-         } else if (nick.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-            /** 이름 유효성 검사 */
-         } else if (name.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false; 
-            /** 비밀번호 유효성검사 */
-         } else if (pass.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-            /** 주민등록번호 유효성검사 */
-         } else if (ssn.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-         } else if (userDao.overlapSsn(ssn)) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.DUPLICATE_SSN);
-            return false;
-            /** Email 유효성검사 */
-         } else if (email.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-         } else if (userDao.overlapEmail(email)) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.DUPLICATE_EMAIL);
-            return false;
-            /** 연락처 유효성검사 */
-         } else if (phoneNum.equals("")) {
-            sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
-                  + MessageType.ISNULL_INPUT);
-            return false;
-         }
-         return true;
-      }
+			String phoneNum) throws IOException {
+		/** ID유효성검사 */
+		if (id.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+		} else if (userDao.overlapId(id)) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.DUPLICATE_ID);
+			return false;
+			/** 닉네임 유효성검사 */
+		} else if (userDao.overlapNick(nick)) {
+
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.DUPLICATE_NICK);
+			return false;
+		} else if (nick.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+			/** 이름 유효성 검사 */
+		} else if (name.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+			/** 비밀번호 유효성검사 */
+		} else if (pass.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+			/** 주민등록번호 유효성검사 */
+		} else if (ssn.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+		} else if (userDao.overlapSsn(ssn)) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.DUPLICATE_SSN);
+			return false;
+			/** Email 유효성검사 */
+		} else if (email.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+		} else if (userDao.overlapEmail(email)) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.DUPLICATE_EMAIL);
+			return false;
+			/** 연락처 유효성검사 */
+		} else if (phoneNum.equals("")) {
+			sendMessage(MessageType.S_JOIN_RESULT + MessageType.DELIMETER + false + MessageType.DELIMETER
+					+ MessageType.ISNULL_INPUT);
+			return false;
+		}
+		return true;
+	}
 
 	public String getUserId() {
 		return requestUserId;

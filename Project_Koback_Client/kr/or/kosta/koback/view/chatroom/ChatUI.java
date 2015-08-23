@@ -41,8 +41,9 @@ public class ChatUI extends JFrame {
 //	private static final String serverIP = "192.168.0.59";	////안상오빠
 //	private static final String serverIP = "192.168.0.54";	////성훈오빠
 	
-	
-	private static final String serverIP = "192.168.0.76";	////광용오빠
+
+//	private static final String serverIP = "192.168.0.76";	////광용오빠
+	private static final String serverIP = "192.168.0.9";	////광용오빠
 //	private static final String serverIP = "192.168.0.54";	////192.168.0.28
 //	private static final int serverPort = 5500;
 	private static final int serverPort = 5550;	//광용오빠
@@ -61,7 +62,6 @@ public class ChatUI extends JFrame {
 		waitRoomListPanel = new WaitRoomListPanel(this);
 //		waitRoomPanel = new WaitingChatRoomPanel();
 		cardP = new JPanel();
-		
 		setComponents();
 		eventRegist();
 
