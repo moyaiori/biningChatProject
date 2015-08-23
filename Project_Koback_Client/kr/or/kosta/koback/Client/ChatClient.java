@@ -5,10 +5,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-/*
- * 2015 02 19 (오후 2시)
- * 틀 구현 : 조현빈
- * */
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;

@@ -1,6 +1,5 @@
 package kr.or.kosta.koback.Client;
 
-import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.view.chatroom.ChatRoomPanel;
 import kr.or.kosta.koback.view.chatroom.ChatUI;
 import kr.or.kosta.koback.view.login.UserLoginPanel;
