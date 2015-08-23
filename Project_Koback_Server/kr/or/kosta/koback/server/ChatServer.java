@@ -140,7 +140,7 @@ public class ChatServer {
 	public void sendInviteRequest(String masterId, String inviteRoomNum, ChatService inviteUser) {
 		try {
 			inviteUser.sendMessage(MessageType.S_INVITE_RESULT + MessageType.DELIMETER + masterId
-					+ MessageType.DELIMETER + inviteRoomNum + MessageType.DELIMETER);
+					+ MessageType.DELIMETER + inviteRoomNum);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

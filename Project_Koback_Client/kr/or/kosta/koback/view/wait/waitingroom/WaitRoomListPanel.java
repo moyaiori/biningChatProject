@@ -80,18 +80,6 @@ public class WaitRoomListPanel extends JPanel {
 		setComponents();
 		eventRegist();
 	}
-/*
-	*//**
-	 * 채팅방 입장
-	 * 
-	 * @param roomNum
-	 *            : 입장하고자하는 방번호
-	 * @param userId
-	 *            : 들어가고자 하는 유저 아이디(userId)
-	 *//*
-	public void entryChatRoom(int roomNum, String userId) {
-
-	}*/
 	/**
 	 * 대기실 유저 리스트
 	 */
@@ -103,30 +91,6 @@ public class WaitRoomListPanel extends JPanel {
 		for (String nickName : user) {
 			listModel.addElement(nickName);
 		}
-
-	}
-
-	/**
-	 * 
-	 * /** 채팅방 개설 pass가 null 일경우 일반방, 아닐경우 비밀방으로 생성한다.
-	 * 
-	 * @param nickName
-	 *            : 방생성하는 유저 닉네임
-	 * @param roomTitle
-	 *            : 방제목
-	 * @param pass
-	 *            : 비밀방을 위한 비밀번호, null로 둘경우 일반방으로 생성
-	 * @param personel
-	 *            : 방 생성시 인원
-	 */
-	public void openChatRoom(String nickName, String roomTitle, int pass, int personel) {
-
-	}
-
-	/**
-	 * 로그아웃
-	 */
-	public void logout() {
 
 	}
 

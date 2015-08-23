@@ -158,6 +158,34 @@ public class ProtocolMethod {
 		}
 	}
 	
+	// 초대시 방입장(비밀방, 일반방 구분없이 입장)
+	public void entryInviteRoom(String id, int roomNum, String roomName, ChatService client){
+		roomManager.getRoomList().get(0).getClients().remove(id);
+		roomManager.getRoomList().get(roomNum).getClients().put(id, client);
+		
+		String userList = waitUserList();
+		
+		StringBuffer sendUser = new StringBuffer(); // 방에 있는 유저 목록
+		Enumeration<String> e = roomManager.getRoomList().get(roomNum).getClients().keys();
+		while (e.hasMoreElements()) {
+			sendUser.append((String) e.nextElement()+",");
+		}
+		
+		try {
+			if(roomManager.getRoomList().get(roomNum).enterRoom()){
+				client.sendMessage(MessageType.S_ENTRY_RESULT+MessageType.DELIMETER+id+MessageType.DELIMETER+true+MessageType.DELIMETER+roomName+MessageType.DELIMETER+roomNum+MessageType.DELIMETER+sendUser.toString());
+				chatServer.sendWaitMessage(MessageType.S_REQUEST_WAITING_LIST+MessageType.DELIMETER+userList); // 대기실에 있는 아이들에게 들어온 아이 알려줌
+				chatServer.sendChatRoomMessage(MessageType.S_SELECTED_ROOM_USERLIST+MessageType.DELIMETER+id+MessageType.DELIMETER+sendUser, roomNum); // 313번 - 채팅방에 있는 아이들에게 나간 아이를 알려줌
+			}else{
+				client.sendMessage(MessageType.S_ENTRY_RESULT+MessageType.DELIMETER+id+MessageType.DELIMETER+false+MessageType.DELIMETER+MessageType.OVER_MAXUSER);
+			}
+		} catch (IOException e1) {
+			GUIUtil.showErrorMessage("방에 입장 할 수 없습니다.");
+		}
+		System.out.println("초대를 수락한 유저가 들어갔는지 확인 : " + roomManager.getRoomList().get(roomNum).getClients());
+		
+	}
+	
 	// 308번 방 나가기 요청 메소드
 	public void exitRoom(String id, int roomNum, ChatService client){
 		int count = roomManager.getRoomList().get(roomNum).leaveRoom();

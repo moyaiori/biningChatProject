@@ -21,6 +21,7 @@ public interface MessageType {
 	String S_ENTRY_RESULT = "211";
 	String C_SECRET_ENTRY = "212";
 	String S_SECRET_ENTRY_RESULT = "213";
+	String C_INVITE_ENTRY = "214";
 	String C_LOGOUT = "230";
 	String SC_CHAT_MESSAGE = "300";
 	String SC_CHAT_EMOTICON = "301";

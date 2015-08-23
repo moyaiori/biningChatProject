@@ -81,6 +81,7 @@ public class ChatRoomPanel extends JPanel {
 	String roomNum; // 현재 켜진 방의 번호
 	String masterID; // 메시지 보낸 사람의 ID
 
+
 	public ChatRoomPanel(ChatUI chatUI) {
 
 		this.chatUI = chatUI;
@@ -462,7 +463,7 @@ public class ChatRoomPanel extends JPanel {
 
 	/* 초대를 거절한 경우 */
 	public void refusalInvite(String inviteUser) {
-		String message = inviteUser + "님께서 초대를 수락하셧습니다.";
+		String message = inviteUser + "님께서 초대를 거절하셧습니다.";
 		JOptionPane.showMessageDialog(null, message);
 	}
 

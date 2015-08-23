@@ -182,13 +182,7 @@ public class ChatClient {
 							break;
 							/* [305] 초대에 대한 응답 */
 						case MessageType.C_INVITE_CONFIRM:
-							System.out.println("C_INVITE_CONFIRM");
-							System.out.println("inviteUser : " + tokens[1]);
-							System.out.println("masterId : " + tokens[2]);
-							System.out.println("isInvite : " + tokens[3]);
-							
 							String inviteUser = tokens[1];
-							
 							if (tokens[3] == "true") {
 								ui.getChatRoomPanel().acceptInvite(inviteUser);
 							}else{

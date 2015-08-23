@@ -11,6 +11,8 @@ import java.util.Hashtable;
 
 import javax.swing.DefaultComboBoxModel;
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
+
 import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.Room;
 import kr.or.kosta.koback.model.RoomManager;
@@ -113,6 +115,11 @@ public class ChatService extends Thread {
 					String entryPass = token[3];
 					String esRoomName = token[4];
 					protocolMethod.entrySecretRoom(requestUserId, sRoomNum, esRoomName, entryPass, this);
+					break;
+				case MessageType.C_INVITE_ENTRY: // [214] 초대시 방입장
+					int iRoomNum = Integer.parseInt(token[2]);
+					String iRoomName = token[3];
+					protocolMethod.entryInviteRoom(requestUserId, iRoomNum, iRoomName, this);
 					break;
 				case MessageType.C_LOGOUT: // [230] 클라이언트가 접속 종료
 					removeClient(this);

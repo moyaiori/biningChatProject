@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import kr.or.kosta.koback.common.MessageType;
+import kr.or.kosta.koback.model.Room;
 
 public class InviteBtnPanel extends JFrame {
 
@@ -37,13 +38,14 @@ public class InviteBtnPanel extends JFrame {
 	GridBagConstraints cons;
 
 	ChatUI chatUI;
-	
+
 	int roomNum;
 
 	public InviteBtnPanel(ChatUI chatUI, String userList) {
 		super("채팅방 초대");
-		this.chatUI = chatUI;this.setContentPane(new JLabel(new ImageIcon("classes/images/popupColor.jpg")));
-      
+		this.chatUI = chatUI;
+		this.setContentPane(new JLabel(new ImageIcon("classes/images/popupColor.jpg")));
+
 		inviteP = new JPanel();
 
 		choiceL = new JLabel("초대할 사람을 선택하세요");
@@ -94,9 +96,9 @@ public class InviteBtnPanel extends JFrame {
 				exit();
 			}
 		});
-		
+
 		inviteB.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectInviteUser();
@@ -112,7 +114,7 @@ public class InviteBtnPanel extends JFrame {
 		});
 
 	}
-	
+
 	// 유저 초대 하기
 	public void selectInviteUser(){
 		JOptionPane.showMessageDialog(this, userJList.getSelectedValue() + "님께 초대를 요청하였습니다.", "초대 요청", JOptionPane.INFORMATION_MESSAGE);
@@ -120,9 +122,9 @@ public class InviteBtnPanel extends JFrame {
 		sb.append("");
 		sb.append(roomNum);
 		String roomNum_string = sb.toString();
-		
 		try {
 			chatUI.getChatClient().sendMessage(MessageType.C_INVITE_USER + MessageType.DELIMETER + chatUI.getUserLoginPanel().userId + MessageType.DELIMETER + roomNum_string + MessageType.DELIMETER + userJList.getSelectedValue());
+//			chatUI.getChatClient().sendMessage(MessageType.C_INVITE_USER + MessageType.DELIMETER + chatUI.getUserLoginPanel().userId + MessageType.DELIMETER + roomNum_string + MessageType.DELIMETER + userJList.getSelectedValue() + MessageType.DELIMETER + );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,7 +132,7 @@ public class InviteBtnPanel extends JFrame {
 		
 		exit();
 	}
-	
+
 	// 대기실 유저 리스트
 	public void chatUserList(String userList) {
 		String users = userList;
@@ -153,5 +155,4 @@ public class InviteBtnPanel extends JFrame {
 		grid.setConstraints(component, cons);
 		add(component);
 	}
-
 }

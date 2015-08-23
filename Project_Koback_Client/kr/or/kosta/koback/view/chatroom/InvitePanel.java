@@ -26,18 +26,21 @@ public class InvitePanel extends JFrame {
 	
 	ChatUI chatUI;
 	String masterID;
+	String roomNum;
 	
 
 	public InvitePanel(String inviteUser, String roomNum, ChatUI chatUI, String masterID){
 		super("채팅방 초대");
 		this.chatUI = chatUI;
 		this.masterID = masterID;
+		this.roomNum = roomNum;
 		
 		okB = new JButton("수락");
 		cancelB = new JButton("거절");
 		
 	    fromL = new JLabel(inviteUser + " 님께서");
-	    toL =  new JLabel(roomNum + " 번방에서");
+//	    toL =  new JLabel(roomNum + ". " +  roomTitle + " 방에서");
+	    toL =  new JLabel(roomNum + ".  방에서");
 	    inviteL = new JLabel("초대하셨습니다");
 	    
 	    gridBagLayout= new GridBagLayout();
