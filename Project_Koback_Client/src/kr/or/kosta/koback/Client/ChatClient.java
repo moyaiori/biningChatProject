@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import kr.or.kosta.koback.common.MessageType;
 import kr.or.kosta.koback.model.FileDao;
 import kr.or.kosta.koback.util.GUIUtil;
-import kr.or.kosta.koback.view.chatroom.ChatRoomPanel;
 import kr.or.kosta.koback.view.chatroom.ChatUI;
 import kr.or.kosta.koback.view.login.UserLoginPanel;
 
