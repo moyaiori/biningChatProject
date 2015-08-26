@@ -1,0 +1,274 @@
+package kr.or.kosta.koback.view.login;
+
+
+/*
+ *    클래스 명 : UserLoginPanel 
+ *  클래스 역할 : 로그인 패널 
+ *  화면 구현 : 윤성훈 (2015 02 19 (오후 2시))
+ *  
+ * 추가 구현 : 조현빈
+ *    추가사항 (2015-08-20)
+ *    1. joinFrameOpen() 메소드
+ *         - 추가 1)회원가입 프레임 보여주기.
+ *  
+ * */
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import kr.or.kosta.koback.view.login.UserLoginPanel.TimerListener;
+import kr.or.kosta.koback.common.MessageType;
+import kr.or.kosta.koback.util.GUIUtil;
+import kr.or.kosta.koback.view.chatroom.ChatUI;
+
+
+public class UserLoginPanel extends JPanel {
+   
+   JButton loginB, joinB;
+   
+   JLabel idL, passwdL;
+   
+   JTextField idTF;
+   JPasswordField passwdTF;
+   JPanel mainP;
+   
+   GridBagLayout gridBagLayout;
+   GridBagConstraints gridBagConstraints;
+   
+//   ImageIcon icon;
+   ChatUI chatUI;
+   UserJoinFrame userJoinFrame;
+   public static String userId;
+   public static int userRoom=0;
+   
+   private int xCoordinate1 = 625;
+   private int yCoordinate1 = -50;
+	
+   private int xCoordinate2 = 125;
+   private int yCoordinate2 = -50;
+	
+   private int xCoordinate3 = 925;
+   private int yCoordinate3 = 200;
+	
+   private int xCoordinate4 = 1225;
+   private int yCoordinate4 = 200;
+	
+	private int xCoordinate5 = 225;
+	private int yCoordinate5 = 350;
+	
+	private int xCoordinate6 = 525;
+	private int yCoordinate6 = 600;
+   
+   /*21일 - 추가 (조현빈)*/
+   public static int userEntry =-1;   //-1 초기화.
+   
+   public UserLoginPanel(ChatUI chatUI){
+     this.chatUI = chatUI;
+      mainP = new JPanel();
+
+         
+      idL = new JLabel("아이디");
+      passwdL = new JLabel("비밀번호");
+      idTF = new JTextField(20);
+      passwdTF = new JPasswordField(20);
+      gridBagLayout = new GridBagLayout();
+      gridBagConstraints = new GridBagConstraints();
+      
+      loginB = new JButton("로 그 인");
+      joinB =  new JButton("회원가입");
+      setComponents();
+      eventRegist();
+   // Create a timer
+/*   		Timer timer = new Timer(10, new TimerListener());
+
+   		timer.start();
+
+   		repaint();*/
+   }
+
+	class TimerListener implements ActionListener {
+
+		/** Handle ActionEvent */
+
+		public void actionPerformed(ActionEvent e) {
+
+			repaint();
+
+		}
+
+	}
+
+   public void setComponents(){
+      
+      setLayout(gridBagLayout); // 패널의 레이아웃을 GridBagLayout으로 설정
+      gridBagConstraints.fill = GridBagConstraints.BOTH;
+      gridBagConstraints.insets = new Insets(3, 5, 3, 5);
+      addComponent(new JLabel(" "),   0, 9, 1, 1, 0.5, 0);
+      addComponent(idL,             1, 9, 1, 1, 0, 0);
+      addComponent(idTF,             2, 9, 2, 1, 0, 0);
+      addComponent(new JLabel(" "),   4, 9, 1, 1, 0.5, 0);
+      
+      addComponent(passwdL,    1, 11, 1, 1, 0, 0);
+      addComponent(passwdTF,    2, 11, 2, 1, 1.0, 0);
+      
+      addComponent(loginB,    1, 13, 1, 1, 0, 0);
+      addComponent(joinB,    2, 13, 1, 1, 0, 0);
+      
+      
+            
+   }
+   
+   private void addComponent(Component com, int gridx, int gridy, int gridWidth, int gridHeight, double weightx,
+         double weighty) {
+      gridBagConstraints.gridx = gridx;
+      gridBagConstraints.gridy = gridy;
+      gridBagConstraints.gridwidth = gridWidth;
+      gridBagConstraints.gridheight = gridHeight;
+      gridBagConstraints.weightx = weightx;
+      gridBagConstraints.weighty = weighty;
+      
+      gridBagLayout.setConstraints(com, gridBagConstraints);
+      
+      add(com); // 컴포넌트를 Panel에 부착한다.
+   }
+   
+   public void eventRegist(){
+      joinB.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+         joinFrameOpen();
+         
+      }
+      });
+      loginB.addActionListener(new ActionListener() {
+         
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            
+            String id = idTF.getText();
+            String pw = new String(passwdTF.getPassword());
+            
+            if(id.isEmpty()){
+               JOptionPane.showMessageDialog(null, "아이디를 입력해주세요");
+            }else if(pw.isEmpty()){
+               JOptionPane.showMessageDialog(null, "비밀번호를 입력해 주세요.");
+            }else{
+            StringBuffer sb = new StringBuffer();
+            sb.append(passwdTF.getPassword());
+//            System.out.println(MessageType.C_LOGIN);
+            try {//100프로토콜 
+               System.out.println(MessageType.C_LOGIN+MessageType.DELIMETER+idTF.getText()+MessageType.DELIMETER+sb);
+               userId = idTF.getText();
+               chatUI.getChatClient().sendMessage(MessageType.C_LOGIN+MessageType.DELIMETER+idTF.getText()+MessageType.DELIMETER+sb);
+               userEntry = 0;    //대기실 입장 일경우 0번
+            } catch (IOException e1) {
+               e1.printStackTrace();
+            }
+            
+            
+            }
+         }
+      });
+      
+   }
+   
+   public void joinFrameOpen(){
+         userJoinFrame = new UserJoinFrame(chatUI);
+      userJoinFrame.setSize(345, 500);
+      GUIUtil.setLookAndFeel(userJoinFrame,GUIUtil.THEME_NIMBUS);
+      GUIUtil.setCenterScreen(userJoinFrame);
+
+      userJoinFrame.setVisible(true);
+   }
+
+	// 배경그리기
+	public ImageIcon icon = new ImageIcon("classes/images/loginP.jpg");
+	public Image img = icon.getImage();
+	private ImageIcon icon2 = new ImageIcon("classes/images/벚꽃-3.gif");
+	private Image img1 = icon2.getImage();
+	private Image img2 = icon2.getImage();
+	private Image img3 = icon2.getImage();
+	private Image img4 = icon2.getImage();
+	private Image img5 = icon2.getImage();
+	private Image img6 = icon2.getImage();
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
+		xCoordinate1 += -1;
+		yCoordinate1 += 1;
+		
+		xCoordinate2 += -1;
+		yCoordinate2 += 1;
+
+		xCoordinate3 += -1;
+		yCoordinate3 += 1;
+		
+		xCoordinate4 += -1;
+		yCoordinate4 += 1;
+		
+		xCoordinate5 += -1;
+		yCoordinate5 += 1;
+		
+		xCoordinate6 += -1;
+		yCoordinate6 += 1;
+		
+		
+		
+		if (xCoordinate1 <= -80) {
+			xCoordinate1 = 625;
+			yCoordinate1 = -150;
+		}
+		
+		if (xCoordinate2 <= -80) {
+			xCoordinate2 = 125;
+			yCoordinate2 = -50;
+		}
+		
+		if (yCoordinate3 > getHeight()) {
+			xCoordinate3 = 925;
+			yCoordinate3 = -150;
+		}
+		if (yCoordinate4 > getHeight()) {
+			xCoordinate4 = 1225;
+			yCoordinate4 = 200;
+		}
+		
+		if (xCoordinate5 <= -80) {
+			xCoordinate5 = 650;
+			yCoordinate5 = -150;
+		}
+		if (yCoordinate6 > getHeight()) {
+			xCoordinate6 = 925;
+			yCoordinate6 = -150;
+		}
+		
+		g.drawImage(img, 0, 0, this);
+		g.drawImage(img1, xCoordinate1, yCoordinate1, this);
+		g.drawImage(img2, xCoordinate2, yCoordinate2, this);
+		g.drawImage(img3, xCoordinate3, yCoordinate3, this);
+		g.drawImage(img4, xCoordinate4, yCoordinate4, this);
+		g.drawImage(img5, xCoordinate5, yCoordinate5, this);
+		g.drawImage(img6, xCoordinate6, yCoordinate6, this);
+	}
+      
+   }
+
+   
